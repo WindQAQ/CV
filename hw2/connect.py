@@ -39,24 +39,18 @@ class Component:
 	def __init__(self):
 		self.up = self.left = float('inf')
 		self.low = self.right = -float('inf')
-		self.X = 0
-		self.Y = 0
-		self.A = 0
 
 	def add(self, x, y):
 		self.up = min(self.up, y)
 		self.low = max(self.low, y)
 		self.left = min(self.left, x)
 		self.right = max(self.right, x)
-		self.X += x	
-		self.Y += y
-		self.A += 1
 
 	def getbound(self):
 		return [self.left, self.up, self.right, self.low]
 
 	def getcentroid(self):
-		return (float(self.X)/float(self.A), float(self.Y)/float(self.A))
+		return ((self.left+self.right)/2, (self.up+self.low)/2)
 
 def drawPlus(draw, centroid, color):
 	l = 7
