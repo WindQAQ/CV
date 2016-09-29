@@ -55,6 +55,15 @@ class Component:
 	def getbound(self):
 		return [self.left, self.up, self.right, self.low]
 
+	def getcentroid(self):
+		return (float(self.X)/float(self.A), float(self.Y)/float(self.A))
+
+def drawPlus(draw, centroid, color):
+	l = 7
+	x, y = centroid
+	draw.line((x-l, y, x+l, y), fill=color)
+	draw.line((x, y-l, x, y+l), fill=color)
+
 def Label(img):
 	pix = img.load()	
 	width, height = img.size
@@ -108,16 +117,17 @@ def Last(img, Eq, labels):
 				pix[x, y] = (0, 0, 0)
 
 	draw = ImageDraw.Draw(out)
-	color = (220, 116, 246)
+	colorP, colorR = (255, 0, 0), (220, 116, 246)
 	for i in Group:
-		draw.rectangle(Group[i].getbound(), fill=None, outline=color)
+		drawPlus(draw, Group[i].getcentroid(), colorP)
+		draw.rectangle(Group[i].getbound(), fill=None, outline=colorR)
 
-	out.save(sys.argv[2], 'bmp')
+	return out
 
 def CC(img):
 	Eq, labels = Label(img)
-	Last(img, Eq, labels)
-
+	out = Last(img, Eq, labels)
+	out.save(sys.argv[2], 'bmp')
 
 if __name__ == '__main__':
 	try:
