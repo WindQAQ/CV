@@ -32,7 +32,7 @@ size = width * height
 histogram = [0] * N
 for x in range(width):
 	for y in range(height):
-		pix_he[x, y] = int(255 * s[pix[x, y]] / size)
+		pix_he[x, y] = round(255 * s[pix[x, y]] / size)
 		histogram[pix_he[x, y]] += 1
 
 fig = plt.figure()
