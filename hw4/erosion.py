@@ -13,21 +13,21 @@ except:
 	print ("Fail to open", sys.argv[1])
 	exit()
 
-imgD = Image.new(img.mode, img.size, color=255)
+imgE = Image.new(img.mode, img.size, color=255)
 width, height = img.size
 
-pix, pixD = img.load(), imgD.load()
+pix, pixE = img.load(), imgE.load()
 
 sumTuple = lambda a, b: (a[0]+b[0], a[1]+b[1]) # element-wise add two tuples
 
-kernel = [(-x, -y) for x, y in kernel]		   # reflect each point about origin
+kernelR = [(-x, -y) for x, y in kernel]		   # reflect each point about origin
 for x in range(width):
 	for y in range(height):
-		for _ in kernel:
+		for _ in kernelR:
 			try:
 				if pix[x, y] == 0:
-					pixD[sumTuple((x, y), _)] = 0
+					pixE[sumTuple((x, y), _)] = 0
 			except IndexError:
 				pass
 
-imgD.save(sys.argv[2], 'bmp')
+imgE.save(sys.argv[2], 'bmp')
