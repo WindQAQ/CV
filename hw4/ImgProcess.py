@@ -11,28 +11,32 @@ def dilation(pix, size, kernel):
 
 	for x in range(width):
 		for y in range(height):
-			for _ in kernel:
-				try:
-					if pix[x, y] == WHITE:
-						ret[sumTuple((x, y), _)] = WHITE
-				except IndexError:
-					pass
+			if pix[x, y] == WHITE:
+				for _ in kernel:
+					keyx, keyy = sumTuple((x, y), _)
+					if keyx < 0 or keyx >= width or keyy < 0 or keyy >= height:
+						continue
+					else:
+						ret[keyx, keyy] = WHITE
 
 	return ret
 
 def erosion(pix, size, kernel):
 	width, height = size
-	ret = {(x, y): WHITE for x in range(width) for y in range(height)}
+	ret = {(x, y): BLACK for x in range(width) for y in range(height)}
 
-	kernelR = [(-x, -y) for x, y in kernel] # reflect each point about origin
+	total = len(kernel)
 	for x in range(width):
 		for y in range(height):
-			for _ in kernelR:
-				try:
-					if pix[x, y] == BLACK:
-						ret[sumTuple((x, y), _)] = BLACK
-				except IndexError:
-					pass
+			sum = 0
+			for _ in kernel:
+				keyx, keyy = sumTuple((x, y), _)
+				if keyx < 0 or keyx >= width or keyy < 0 or keyy >= height or pix[keyx, keyy] == BLACK:
+					break
+				elif pix[keyx, keyy] == WHITE:
+					sum += 1
+			if sum == total:
+				ret[x, y] = WHITE
 
 	return ret
 
@@ -46,8 +50,7 @@ def closing(pix, size, kernel):
 
 def hitAndmiss(pix, size, kernelJ, kernelK):
 	width, height = size
-	img = Image.new('L', size)
-	pixComplement = img.load()
+	pixComplement = {}
 	for x in range(width):
 		for y in range(height):
 			pixComplement[x, y] = BLACK if pix[x, y] == WHITE else WHITE
@@ -62,7 +65,6 @@ def hitAndmiss(pix, size, kernelJ, kernelK):
 				ret[x, y] = WHITE
 			else:
 				ret[x, y] = BLACK
-
 	return ret
 
 if __name__ == '__main__':
