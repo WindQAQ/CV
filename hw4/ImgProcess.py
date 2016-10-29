@@ -7,22 +7,22 @@ BLACK, WHITE = 0, 255
 
 def dilation(pix, size, kernel):
 	width, height = size
-	temp = {(x, y): BLACK for x in range(width) for y in range(height)}
+	ret = {(x, y): BLACK for x in range(width) for y in range(height)}
 
 	for x in range(width):
 		for y in range(height):
 			for _ in kernel:
 				try:
 					if pix[x, y] == WHITE:
-						temp[sumTuple((x, y), _)] = WHITE
+						ret[sumTuple((x, y), _)] = WHITE
 				except IndexError:
 					pass
 
-	return temp
+	return ret
 
 def erosion(pix, size, kernel):
 	width, height = size
-	temp = {(x, y): WHITE for x in range(width) for y in range(height)}
+	ret = {(x, y): WHITE for x in range(width) for y in range(height)}
 
 	kernelR = [(-x, -y) for x, y in kernel] # reflect each point about origin
 	for x in range(width):
@@ -30,19 +30,40 @@ def erosion(pix, size, kernel):
 			for _ in kernelR:
 				try:
 					if pix[x, y] == BLACK:
-						temp[sumTuple((x, y), _)] = BLACK
+						ret[sumTuple((x, y), _)] = BLACK
 				except IndexError:
 					pass
 
-	return temp
+	return ret
 
 def opening(pix, size, kernel):
-	temp = erosion(pix, size, kernel)
-	return dilation(temp, size, kernel)
+	ret = erosion(pix, size, kernel)
+	return dilation(ret, size, kernel)
 
 def closing(pix, size, kernel):
-	temp = dilation(pix, size, kernel)
-	return erosion(temp, size, kernel)
+	ret = dilation(pix, size, kernel)
+	return erosion(ret, size, kernel)
+
+def hitAndmiss(pix, size, kernelJ, kernelK):
+	width, height = size
+	img = Image.new('L', size)
+	pixComplement = img.load()
+	for x in range(width):
+		for y in range(height):
+			pixComplement[x, y] = BLACK if pix[x, y] == WHITE else WHITE
+
+	temp1 = erosion(pix, size, kernelJ)
+	temp2 = erosion(pixComplement, size, kernelK)
+
+	ret = {}
+	for x in range(width):
+		for y in range(height):
+			if temp1[x, y] == WHITE and temp2[x, y] == WHITE:
+				ret[x, y] = WHITE
+			else:
+				ret[x, y] = BLACK
+
+	return ret
 
 if __name__ == '__main__':
 
@@ -61,23 +82,31 @@ if __name__ == '__main__':
 	(-2,  1), (-1,  1), (0,  1), (1,  1), (2,  1),
 			  (-1,  2), (0,  2), (1,  2)]
 
+	kernelJ = [(-1,  0), (0,  0),
+						 (0,  1)]
+
+	kernelK = [(0, -1), (1, -1),
+						(1,  0)]
+
 	size = imgIn.size
 	imgOut = Image.new(imgIn.mode, imgIn.size)
 	pixIn, pixOut = imgIn.load(), imgOut.load()
 
 	if sys.argv[1] == 'dilation':
-		temp = dilation(pixIn, size, kernel)
+		ret = dilation(pixIn, size, kernel)
 	elif sys.argv[1] == 'erosion':
-		temp = erosion(pixIn, size, kernel)
+		ret = erosion(pixIn, size, kernel)
 	elif sys.argv[1] == 'opening':
-		temp = opening(pixIn, size, kernel)
+		ret = opening(pixIn, size, kernel)
 	elif sys.argv[1] == 'closing':
-		temp = closing(pixIn, size, kernel)
+		ret = closing(pixIn, size, kernel)
+	elif sys.argv[1] == 'hitmiss':
+		ret = hitAndmiss(pixIn, size, kernelJ, kernelK)
 	else:
 		sys.stderr.write('OPTION is dilation, erosion, opening or closing.\n')
 
 	for x in range(imgIn.width):
 		for y in range(imgIn.height):
-			pixOut[x, y] = temp[x, y]
+			pixOut[x, y] = ret[x, y]
 
 	imgOut.save(sys.argv[3], 'bmp')
