@@ -37,7 +37,7 @@ def f(a):
 def sumTuple(x, y):
 	return (x[0]+y[0], x[1]+y[1])
 
-def transition(M, cur):
+def translation(M, cur):
 	ret = {}
 
 	for _ in product(range(-1, 2), repeat=2):
@@ -54,7 +54,7 @@ def Yokoi(M, size):
 	width, height = size
 	for cur in product(range(width), range(height)):
 		if M[cur] == WHITE:
-			T = transition(M, cur)
+			T = translation(M, cur)
 			ret[cur] = f([h(T, B) for B in BLOCK])
 		else:
 			ret[cur] = ' '
