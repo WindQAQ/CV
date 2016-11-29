@@ -119,16 +119,8 @@ def connect_shrink(M, size):
 	return ret
 
 def thinning(M, size):
-	# f = open('test.txt', 'w')
+	
 	while True:
-		# for y in range(size[0]):
-		# 	for x in range(size[1]):
-		# 		p = '*' if M[x, y] == WHITE else ' '
-		# 		print(p, end='', file=f)
-		# 	print('', file=f)
-
-		# print('\n==========================================================================================================================================================================\n', file=f)
-
 		X = mark_interior(M, size)
 		Y = pair_rel(X, size)
 		ret = connect_shrink(Y, size)
@@ -136,12 +128,12 @@ def thinning(M, size):
 		if ret == M:
 			break
 		M = ret
-	# f.close()
+
 	return ret
 
 def main():
-	if len(sys.argv) != 3:
-		sys.stderr.write('Usage: python3 thinning.py IMG_IN IMG_OUT\n')
+	if len(sys.argv) != 4:
+		sys.stderr.write('Usage: python3 thinning.py IMG_IN IMG_OUT FILE_OUT\n')
 		exit()
 	try:
 		imgIn = Image.open(sys.argv[1])
@@ -163,6 +155,14 @@ def main():
 		pixOut[cur] = M[cur]
 
 	imgOut.save(sys.argv[2], 'bmp')
+	
+	f = open(sys.argv[3], 'w')
+	for y in range(downSize[0]):
+		for x in range(downSize[1]):
+			p = '*' if M[x, y] == WHITE else ' '
+			print(p, end='', file=f)
+		print('', file=f)
+	f.close()
 
 if __name__ == '__main__':
 	main()
