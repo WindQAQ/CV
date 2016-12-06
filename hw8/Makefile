@@ -45,12 +45,7 @@ close_open:
 	python3 noise-removal.py lena-salt-pepper-01.bmp lena-salt-pepper-01-close-open.bmp close_open
 	python3 noise-removal.py lena-salt-pepper-005.bmp lena-salt-pepper-005-close-open.bmp close_open
 
-SNR: 
-	@python3 SNR.py lena.bmp lena-salt-pepper-01.bmp
-	@python3 SNR.py lena.bmp lena-salt-pepper-005.bmp
-	@python3 SNR.py lena.bmp lena-gaussian-10.bmp
-	@python3 SNR.py lena.bmp lena-gaussian-30.bmp
-
+SNR:
 	@python3 SNR.py lena.bmp lena-salt-pepper-005-box-3x3.bmp
 	@python3 SNR.py lena.bmp lena-salt-pepper-005-box-5x5.bmp
 	@python3 SNR.py lena.bmp lena-salt-pepper-005-median-3x3.bmp
