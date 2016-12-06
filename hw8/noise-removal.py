@@ -69,18 +69,9 @@ def box_filter(pix, size, kernel):
 	return ret
 
 def median_filter(pix, size, kernel):
-	temp = {}
-	for position in product(range(size[0]), range(size[1])):
-		temp[position] = pix[position]
-
 	ret = {}
-	while True:
-		for position in product(range(size[0]), range(size[1])):
-			ret[position] = int(median(sorted(T(pix, position, kernel))))
-		if ret == temp:
-			break
-		temp = ret
-
+	for position in product(range(size[0]), range(size[1])):
+		ret[position] = int(median(sorted(T(pix, position, kernel))))
 	return ret
 
 def open_close(pix, size, kernel):
