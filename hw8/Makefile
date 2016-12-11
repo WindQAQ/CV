@@ -5,8 +5,8 @@ removal: box median
 noisy: gaussian salt_pepper open_close close_open
 
 salt_pepper:
-	python3 noisy-image.py lena.bmp lena-salt-pepper-01.bmp salt_pepper 0.1
-	python3 noisy-image.py lena.bmp lena-salt-pepper-005.bmp salt_pepper 0.05
+	python3 noisy-image.py lena.bmp lena-salt-pepper-01.bmp salt_pepper 0.2
+	python3 noisy-image.py lena.bmp lena-salt-pepper-005.bmp salt_pepper 0.1
 
 gaussian:
 	python3 noisy-image.py lena.bmp lena-gaussian-10.bmp gaussian 10
