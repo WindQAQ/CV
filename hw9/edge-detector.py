@@ -144,7 +144,7 @@ def main():
 	try:
 		ImageIn = Image.open(args.input)
 	except Exception as e:
-		print('Cannot open {}.'.format(args.input))
+		print('Cannot open {}.'.format(args.input), file=sys.stderr)
 		exit(1)
 
 	thres = args.thres
