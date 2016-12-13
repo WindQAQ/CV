@@ -11,7 +11,7 @@ edge = lambda x, T: (WHITE if x < T else BLACK)
 
 def flip(p, bound):
 	if p < 0:
-		return -p
+		return -p-1
 	elif p >= bound:
 		return 2 * bound - 1 - p
 
@@ -46,25 +46,25 @@ def Roberts(pix, size, thres):
 
 	return edge_detect(pix, size, mask, thres, 'sum')
 
-def	Prewitt(pix, size, thres):
+def Prewitt(pix, size, thres):
 	mask = [[ [-1, -1, -1], [0, 0, 0], [1, 1, 1] ], \
 			[ [-1, 0, 1], [-1, 0, 1], [-1, 0, 1] ]]
 
 	return edge_detect(pix, size, mask, thres, 'sum')
 
-def	Sobel(pix, size, thres):
+def Sobel(pix, size, thres):
 	mask = [[ [-1, -2, -1], [0, 0, 0], [1, 2, 1] ], \
 			[ [-1, 0, 1], [-2, 0, 2], [-1, 0, 1] ]]
 
 	return edge_detect(pix, size, mask, thres, 'sum')
 
-def	FreiChen(pix, size, thres):
+def FreiChen(pix, size, thres):
 	mask = [[ [-1, -sqrt(2), -1], [0, 0, 0], [1, sqrt(2), 1] ], \
 			[ [-1, 0, 1], [-sqrt(2), 0, sqrt(2)], [-1, 0, 1] ]]
 
 	return edge_detect(pix, size, mask, thres, 'sum')
 
-def	Kirsch(pix, size, thres):
+def Kirsch(pix, size, thres):
 	mask = [[ [-3, -3, 5], [-3, 0, 5], [-3, -3, 5] ], \
 			[ [-3, 5, 5], [-3, 0, 5], [-3, -3, -3] ], \
 			[ [5, 5, 5], [-3, 0, -3], [-3, -3, -3] ], \

@@ -13,7 +13,7 @@ _8NEIGHBOR = [(-1, -1), (0, -1), (1, -1),
 
 def flip(p, bound):
 	if p < 0:
-		return -p
+		return -p-1
 	elif p >= bound:
 		return 2 * bound - 1 - p
 
