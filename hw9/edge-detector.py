@@ -20,14 +20,13 @@ def flip(p, bound):
 def convolve(M, size, pos, mask):
 	ret = 0;
 	X, Y = int(len(mask)/2), int(len(mask[0])/2)
-	for (i, row) in enumerate(mask):
-		for (j, value) in enumerate(row):
+	for (j, row) in enumerate(mask):
+		for (i, value) in enumerate(row):
 			offset = (i-X, j-Y)
 			(x, y) = sumTuple(pos, offset)
 			x = flip(x, size[0])
 			y = flip(y, size[1])
 			ret += M[x, y] * value
-	
 	return ret
 
 def edge_detect(pix, size, mask, thres, type):
@@ -104,8 +103,8 @@ def NB(pix, size, thres):
 			 [[ 100,  100,  100,   32, -100], 
 			  [ 100,  100,   92,  -78, -100],
 			  [ 100,  100,    0, -100, -100],
-			  [ 100,  -78,  -92, -100, -100], 
-			  [-100,  -32, -100, -100, -100]], \
+			  [ 100,   78,  -92, -100, -100], 
+			  [ 100,  -32, -100, -100, -100]], \
 
 			 [[-100, -100,    0,  100,  100], 
 			  [-100, -100,    0,  100,  100],

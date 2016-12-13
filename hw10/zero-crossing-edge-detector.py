@@ -22,8 +22,8 @@ def flip(p, bound):
 def convolve(M, size, pos, mask):
 	ret = 0;
 	X, Y = int(len(mask)/2), int(len(mask[0])/2)
-	for (i, row) in enumerate(mask):
-		for (j, value) in enumerate(row):
+	for (j, row) in enumerate(mask):
+		for (i, value) in enumerate(row):
 			offset = (i-X, j-Y)
 			(x, y) = sumTuple(pos, offset)
 			x = flip(x, size[0])
