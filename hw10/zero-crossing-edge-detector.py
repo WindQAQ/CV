@@ -77,30 +77,28 @@ def LOG(pix, size, thres):
 
 	return zero_crossing(convolve_whole(pix, size, mask), size, thres)
 
-def Gassian(mean, std, p):
-	distance = sum([(p[i]-mean[i])**2 for i in range(len(mean))])
-	return ( 1/(2*pi*std**2) ) * ( e ** ( -distance/( 2*(std**2) ) ) )
+def Gaussian(x, mean, std):
+	return (1 / (sqrt(2 * pi) * std )) * \
+			e ** ( (-(x - mean) ** 2 ) / (2 * std ** 2))
 
-def DOG_mask(in_sigma, ex_sigma, size=(11, 11)):
-	mean = [int(size[0]/2), int(size[1]/2)]
+def Gaussian2d(x, y, std_x, std_y, mean_x=0, mean_y=0):
+	return Gaussian(x, mean_x, std_x) * Gaussian(y, mean_y, std_y);
 
-	mask = [[ Gassian(mean, in_sigma, [x, y])-Gassian(mean, ex_sigma, [x, y]) \
-										for y in range(size[1])] \
-											for x in range(size[0])]	
+def DOG_mask(in_sigma, ex_sigma, size=11):
+	l = int(-size / 2)
+	r = int(size / 2) + 1
 
-	flat = [y for x in mask for y in x]
-	mu = sum(flat) / (size[0]*size[1])
-	return  [[round((mask[x][y]-mu)/mu) \
-					for y in range(size[1])] \
-						for x in range(size[0])]	
+	mask = []
+	for i, x in enumerate(range(l, r)):
+		mask.append([])
+		for y in range(l, r):
+			mask[i].append(Gaussian2d(x, y, std_x=in_sigma, std_y=in_sigma) \
+							-Gaussian2d(x, y, std_x=ex_sigma, std_y=ex_sigma))
+
+	return mask
 
 def DOG(pix, size, in_sigma, ex_sigma, thres):
 	mask = DOG_mask(in_sigma, ex_sigma)
-
-	# for x in mask:
-	# 	for y in x:
-	# 		print('{0: .3f}'.format(y), end=' ')
-	# 	print('')
 
 	return zero_crossing(convolve_whole(pix, size, mask), size, thres)
 
@@ -119,7 +117,7 @@ def main():
 	parser.add_argument('-in-sigma', action='store', type=int, dest='in_sigma', \
 						help='Inhibitory sigma for DOG (default 1)', default=1)
 	parser.add_argument('-ex-sigma', action='store', type=int, dest='ex_sigma', \
-						help='Inhibitory sigma for DOG (default 1)', default=3)
+						help='excitatory sigma for DOG (default 1)', default=3)
 	parser.add_argument('-thres', action='store', type=int, dest='thres', \
 						help='Threshold (default 20)', default=20)
 	args = parser.parse_args()
