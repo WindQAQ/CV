@@ -2,6 +2,7 @@ import argparse
 from math import sqrt, pi, e
 from itertools import product
 from PIL import Image
+import numpy as np
 
 BLACK, WHITE = 0, 255
 
@@ -45,6 +46,8 @@ def zero_crossing(M, size, thres):
 			try:
 				neighbor = M[sumTuple(pos, offset)]
 				if (cur > thres and neighbor < -thres):
+					ret[pos] = BLACK
+				elif (cur < -thres and neighbor > thres):
 					ret[pos] = BLACK
 			except:
 				pass
@@ -94,6 +97,9 @@ def DOG_mask(in_sigma, ex_sigma, size=11):
 		for y in range(l, r):
 			mask[i].append(Gaussian2d(x, y, std_x=in_sigma, std_y=in_sigma) \
 							-Gaussian2d(x, y, std_x=ex_sigma, std_y=ex_sigma))
+
+	mask = np.array(mask)
+	mask -= np.mean(mask)
 
 	return mask
 
